@@ -7,49 +7,300 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/mouse.h>
 
-/ {
-        keymap {
+#define CH 0
+#define CH_DK 1
+#define CH_NAV 2
+#define CH_EX 3
+#define ERG 4
+#define ERG_NAV 5
+#define MSE 6
+#define GAMING 7
+#define TAIPO_UP 8
+#define TAIPO_DOWN 9
+#define FUN 10
+#define NONE 11
+
+#define DEFAULT_COMBOS_TIMEOUT_MS 50
+
+/
+{
+        combos {
+                compatible = "zmk,combos";
+                // Key Positions
+                // -----------------------------------------------------------------
+                // |  0 |  1 |  2 |  3 |  4 |  5 |   |  6 |  7 |  8 |  9 | 10 | 11 |
+                // | 12 | 13 | 14 | 15 | 16 | 17 |   | 18 | 19 | 20 | 21 | 22 | 23 |
+                // | 24 | 25 | 26 | 27 | 28 | 29 |   | 30 | 31 | 32 | 33 | 34 | 35 |
+                //                | 36 | 37 | 38 |   | 39 | 40 | 41 |
+                combo_ESC {
+                        timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
+                        key-positions = <13 14>;
+                        bindings = <&mt LS(LGUI) ESC>;
+                        layers = <CH CH_NAV ERG ERG_NAV MSE>;
+                };
+                combo_TAB {
+                        timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
+                        key-positions = <14 15>;
+                        bindings = <&mt LC(LGUI) TAB>;
+                        layers = <CH CH_NAV ERG ERG_NAV MSE>;
+                };
+                combo_ENTER {
+                        timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
+                        key-positions = <15 16>;
+                        bindings = <&mt LC(LALT) RET>;
+                        layers = <CH CH_NAV ERG ERG_NAV MSE>;
+                };
+                combo_CAPS_LOCK {
+                        timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
+                        key-positions = <13 22>;
+                        bindings = <&kp CAPS>;
+                        layers = <CH CH_NAV ERG ERG_NAV MSE>;
+                };
+        };
+};
+
+&mt
+{
+        tapping-term-ms = <250>;
+        flavor = "tap-preferred";
+};
+
+/
+{
+        behaviors {
+                hs: behavior.hold_tap {
+                        compatible = "zmk,behavior-hold-tap";
+                        #binding-cells = <2>;
+                        tapping-term-ms = <250>;
+                        quick-tap-ms = <0>;
+                        flavor = "tap-preferred";
+                        bindings = <&kp>, <&sl>;
+                        // hold-trigger-on-release = <1>;
+                };
+        };
+};
+
+/
+{
+        keymap
+        {
                 compatible = "zmk,keymap";
 
-                default_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BSPC |
-// | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  |  '   |
-// | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | ESC  |
-//                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
+                qwertz_default_layer
+                {       // 0
+                        // -----------------------------------------------------------------------------------------
+                        // | --- |  Q  |  W  |  E  |  R  |  T  |   |  Z  |  U  |  I  |  O  |  P  | --- |
+                        // | --- |  A  |  S  |  D  |  F  |  G  |   |  H  |  J  |  K  |  L  |  DK | --- |
+                        // | --- |  Y  |  X  |  C  |  V  |  B  |   |  N  |  M  |  ,  |  .  |  -  | --- |
+                        //                   | MSE | DEL | BSPC |   | SPC  | ENT | Mo3 |
+                        display-name = "ISO-CH";
                         bindings = <
-   &kp TAB   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
-   &kp LCTRL &kp A &kp S &kp D &kp F &kp G   &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
-   &kp LSHFT &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp ESC
-                  &kp LGUI &mo 1 &kp SPACE   &kp RET &mo 2 &kp RALT
-                        >;
-                };
-                lower_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  | BSPC |
-// | BTCLR| BT1 | BT2 | BT3 | BT4 | BT5 |   | LFT | DWN |  UP | RGT |     |      |
-// | SHFT |     |     |     |     |     |   |     |     |     |     |     |      |
-//                    | GUI |     | SPC |   | ENT |     | ALT |
-                        bindings = <
-   &kp TAB    &kp N1       &kp N2       &kp N3       &kp N4       &kp N5         &kp N6   &kp N7   &kp N8 &kp N9    &kp N0 &kp BSPC
-   &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4   &kp LEFT &kp DOWN &kp UP &kp RIGHT &trans &trans
-   &kp LSHFT  &trans       &trans       &trans       &trans       &trans         &trans   &trans   &trans &trans    &trans &trans
-                                    &kp LGUI     &trans       &kp SPACE      &kp RET  &trans   &kp RALT
+                            &none &kp Q       &kp W      &kp E       &kp R      &kp T       &kp Y &kp U      &kp I       &kp O      &kp P           &none
+                            &none &mt LSHFT A &mt LGUI S &mt LCTRL D &mt LALT F &kp G       &kp H &mt LALT J &mt LCTRL K &mt LGUI L &hs LSHFT CH_DK &none
+                            &none &kp Z       &kp X      &kp C       &kp V      &kp B       &kp N &kp M      &kp COMMA   &kp DOT    &kp FSLH        &none
+                                                     &mo MSE &mt RALT DEL &lt CH_EX BSPC           &lt CH_NAV SPACE &lt FUN RET &mo NONE
                         >;
                 };
 
-                raise_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BSPC |
-// | CTRL |     |     |     |     |     |   |  -  |  =  |  [  |  ]  |  \  |  `   |
-// | SHFT |     |     |     |     |     |   |  _  |  +  |  {  |  }  | "|" |  ~   |
-//                    | GUI |     | SPC |   | ENT |     | ALT |
+                qwertz_deadkey_layer
+                {       // 1
+                        // -----------------------------------------------------------------------------
+                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
+                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
+                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
+                        //                  | --- | --- | ---- |   | ---- | --- | --- |
+                        display-name = "ISO-CH";
                         bindings = <
-   &kp  TAB  &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS  &kp ASTRK &kp LPAR &kp RPAR &kp BSPC
-   &kp LCTRL &trans   &trans &trans   &trans   &trans      &kp MINUS &kp EQUAL &kp LBKT  &kp RBKT &kp BSLH &kp GRAVE
-   &kp LSHFT &trans   &trans &trans   &trans   &trans      &kp UNDER &kp PLUS  &kp LBRC  &kp RBRC &kp PIPE &kp TILDE
-                             &kp LGUI &trans   &kp SPACE   &kp RET   &trans    &kp RALT
+                            &none &none   &none    &none    &none &none       &none &none &none &none &none &none
+                            &none &kp SQT &kp SEMI &kp LBKT &none &none       &none &none &none &none &none &none
+                            &none &none   &none    &none    &none &none       &none &none &none &none &none &none
+                                                      &none &none &none       &none &none &none
+                        >;
+                };
+
+                qwertz_numpad_arrows
+                {       // 2
+                        // -----------------------------------------------------------------------------------------
+                        // | CAPS |     |  %  |  up |  #  | --- |   |  /  |  7  |  8  |  9  |  -  |     |
+                        // | TAB  |  @  |left | down|right| --- |   |  *  |  4  |  5  |  6  |  +  |  =  |
+                        // | ESC  |  \  |     |  ç  |  ~  | --- |   |  0  |  1  |  2  |  3  |  .  |     |
+                        //                   | MSE | DEL | BSPC |   | SPC  | ENT | Mo3 |
+                        display-name = "NAV-PAD";
+                        bindings = <
+                            &trans &none        &kp LS(N5) &kp UP     &kp RA(N3)    &none        &kp LS(N7) &kp N7      &kp N8       &kp N9      &kp FSLH         &none 
+                            &trans &kp RA(N2)   &kp LEFT   &kp DOWN   &kp RIGHT     &none        &kp LS(N3) &mt LALT N4 &mt LCTRL N5 &mt LGUI N6 &mt LSHFT LS(N1) &kp LS(N0) 
+                            &trans &kp RA(NUBS) &none      &kp LS(N4) &kp RA(EQUAL) &none        &kp N0     &kp N1      &kp N2       &kp N3      &kp DOT          &kp RET 
+                                                                  &trans &trans &trans              &trans &none &trans
+                        >;
+                };
+
+                qwertz_special_characters
+                {       // 3
+                        // -----------------------------------------------------------------------------------------
+                        // |  §   |  °  |  %  |  ^  |  #  |   ¢  |   |  |  |  [   |   ]  |     |  ?  |  `  |
+                        // | TAB  |  ¬  |  &  |  <  |  >  |   "  |   |  '  |  (   |   )  |  !  |  ´  |  ¨  |
+                        // | ESC  |  \  |  |  |  ç  |  ~  |   =  |   |     |  {   |   }  |  $  |  £  |     |
+                        //                    | DEL | LWR | BSPC |   | SPC | RSE  | RALT |
+                        display-name = "EXTRAS";
+                        bindings = <
+                            &kp GRAVE &kp LS(GRAVE) &kp LS(N5) &kp EQUAL  &kp RA(N3)    &kp RA(N8)        &kp RA(N1) &kp RA(LBKT) &kp RA(RBKT) &none        &kp LS(MINUS) &kp LS(EQUAL) 
+                            &trans    &kp RA(N6)    &kp LS(N6) &kp NUBS   &kp LS(NUBS)  &kp LS(N2)        &kp MINUS  &kp LS(N8)   &kp LS(N9)   &kp LS(RBKT) &kp RA(MINUS) &kp RBKT 
+                            &trans    &kp RA(NUBS)  &kp RA(N7) &kp LS(N4) &kp RA(EQUAL) &kp LS(N0)        &none      &kp RA(APOS) &kp RA(NUHS) &kp NUHS     &kp LS(NUHS)  &trans 
+                                                                           &trans &trans &trans              &trans &none &trans
+                        >;
+                };
+
+                ergol_default_layer
+                {       // 4 - BASE
+                        // -----------------------------------------------------------------------------
+                        // |  Q  |  C  |  O  |  P  |  W  |   |  J  |  M  |  D  |DK1 !|  Y  |
+                        // |  A  |  S  |  E  |  N  |  F  |   |  L  |  R  |  T  |  I  |  U  |
+                        // |  Z  |  X  | - ? |  V  |  B  |   | . : |  H  |  G  | , ; |  K  |
+                        //            | ESC | DEL | BSPC |   | SPC  | ENT | --- |
+                        // 4 - DEAD-KEY - DK1
+                        // -----------------------------------------------------------------------------
+                        // | â Â | ç Ç | œ Œ | ô Ô | --- |   | --- |  µ  |  _  |DK2 ¡| û Û |
+                        // | à À | é É | è È | ê Ê | ñ Ñ |   |  (  |  )  | î Î | ï Ï | ù Ù |
+                        // | æ Æ | ß ẞ | - ¿ |  –  |  —  |   |  …  | --- |GREEK| · • | --- |
+                        //            | ESC | DEL | BSPC |   |  ’   | ENT | --- |
+                        // 4 - DEAD-KEY - DK2
+                        // -----------------------------------------------------------------------------
+                        // | --- | ¢ ₡ |௹ ૱ | ₰ ₧ |  ₩  |   | --- |₥ ℳ | ₫ ₯ | --- | ¥ 円 |
+                        // | ؋ ₳ | ₪ $ | € ₠ |  ₦  | ƒ ₣ |   | £ ₤ | ₢ ₨ | ৳ ₮ | ﷼ ៛ |元 圓 |
+                        // | --- | --- | --- | --- | ฿ ₱ |   | --- |  ₴  |  ₲  | --- |  ₭  |
+                        //            | ESC | DEL | BSPC |   | SPC  | ENT | --- |
+                        // 4 - ALTGR
+                        // -----------------------------------------------------------------------------
+                        // | ^ D^| < ≤ | > ≥ | $ D¤| % ‰ |   | @ ° |  &  | * × | ' ´ |  `  |
+                        // | { Dˇ|  (  |  )  | } ˙ | = ≠ |   | \ D/| + ± | - ¯ | / ÷ | " ˝ |
+                        // | ~ D~| [ , | ] ˛ | _ – |  #  |   | | ¦ | ! ¬ | ; ¸ | : : | ? ˘ |
+                        //            | ESC | DEL | BSPC |   | SPC  | ENT | --- |
+                        // 4 - GREEK
+                        // -----------------------------------------------------------------------------
+                        // | χ Χ | --- | ο Ο | π Π | ω Ω |   | θ Θ | μ Μ | δ Δ | --- | ψ Ψ |
+                        // | α Α | σ Σ | ε Ε | ν Ν | φ Φ |   | λ Λ | ρ Ρ | τ Τ | ι Ι | υ Υ |
+                        // | ζ Ζ | ξ Ξ | --- | --- | β Β |   | --- | η Η | γ Γ | --- | κ Κ |
+                        //            | ESC | DEL | BSPC |   | SPC  | ENT | --- |
+                        display-name = "ERGO-L";
+                        bindings = <
+                            &none &kp Q       &kp W      &kp E       &kp R      &kp T       &kp Y &kp U      &kp I       &kp O      &kp P          &none
+                            &none &mt LSHFT A &mt LGUI S &mt LCTRL D &mt LALT F &kp G       &kp H &mt LALT J &mt LCTRL K &mt LGUI L &mt LSHFT SEMI &none
+                            &none &kp Z       &kp X      &kp C       &kp V      &kp B       &kp N &kp M      &kp COMMA   &kp DOT    &kp FSLH       &none
+                                            &lt MSE ESC &mt LSHFT DEL &mt RALT BSPC           &lt ERG_NAV SPACE &lt FUN RET &mo NONE
+                        >;
+                };
+
+                ergol_navigation_layer
+                {       // 5 - NAVIGATION
+                        // -----------------------------------------------------------------------------
+                        // |CPS-L|HOME | up  | END |PG-UP|   | / ÷ | 7 & | 8 * | 9 # | --- |
+                        // | TAB |left |down |right|PG-DW|   | - ? | 4 $ | 5 % | 6 ^ | 0 @ |
+                        // | ESC | --- | --- | --- |     |   | , ; | 1 € | 2 « | 3 » | . : |
+                        //            | ESC | DEL | BSPC |   | SPC  | ENT | --- |
+                        display-name = "NAV-PAD";
+                        bindings = <
+                            &none &kp CAPS &kp HOME &kp UP   &kp END   &kp PG_UP        &kp RA(L) &kp N7      &kp N8       &kp N9      &none        &none
+                            &none &kp TAB  &kp LEFT &kp DOWN &kp RIGHT &kp PG_DN        &kp C     &mt LALT N4 &mt LCTRL N5 &mt LGUI N6 &mt LSHFT N0 &none
+                            &none &kp ESC  &none    &none    &none     &none            &kp DOT   &kp N1      &kp N2       &kp N3      &kp N        &none
+                                                         &trans &trans &trans              &trans &trans &trans
+                        >;
+                };
+
+                mouse_layer
+                {       // 6 - MOUSE
+                        // -----------------------------------------------------------------------------
+                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
+                        // | --- | --- | --- | --- | --- | --- |   | --- | MS1 | MS2 | MS3 | --- | --- |
+                        // | --- | --- | --- | --- | --- |     |   | --- | MS4 | MS5 | --- | --- | --- |
+                        //                  | ESC | DEL | BSPC |   | SPC  | ENT | --- |
+                        display-name = "MOUSE";
+                        bindings = <
+                            &none &none     &none    &none     &none    &none        &none &none    &none    &none    &none &none
+                            &none &kp LSHFT &kp LGUI &kp LCTRL &kp LALT &none        &none &mkp MB1 &mkp MB2 &mkp MB3 &none &none
+                            &none &none     &none    &none     &none    &none        &none &mkp MB4 &mkp MB5 &none    &none &none
+                                                          &none &none &none               &none &none &none
+                        >;
+                };
+
+                qwertz_gaming_layer
+                {       // 7
+                        // -----------------------------------------------------------------------------------------
+                        // | M |  TAB  |  Q  |  W  |  E  |  R  |   | --- | --- | --- | --- | --- | --- |
+                        // | I | SHIFT |  A  |  S  |  D  |  F  |   | --- | --- | --- | --- | --- | --- |
+                        // | L | LCTRL |  Y  |  X  |  C  |  V  |   | --- | --- | --- | --- | --- | --- |
+                        //                  |  G  |  T  | SPC  |   | ---  | FUN | --- |
+                        display-name = "GAMING";
+                        bindings = <
+                            &kp M  &kp TAB    &kp Q  &kp W  &kp E  &kp R      &none &none &none &none &none &none
+                            &kp I  &kp LSHFT  &kp A  &kp S  &kp D  &kp F      &none &none &none &none &none &none
+                            &kp L  &kp LCTRL  &kp Z  &kp X  &kp C  &kp V      &none &none &none &none &none &none
+                                                     &kp G &kp T &kp SPC      &none &mo FUN &none
+                        >;
+                };
+
+                taipo_up_layer
+                {       // 8 - taipo up
+                        // -----------------------------------------------------------------------------
+                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
+                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
+                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
+                        //                  | --- | --- | ---- |   | ---- | --- | --- |
+                        display-name = "TAIPO+";
+                        bindings = <
+                            &none &none &none &none &none &none       &none &none &none &none &none &none
+                            &none &none &none &none &none &none       &none &none &none &none &none &none
+                            &none &none &none &none &none &none       &none &none &none &none &none &none
+                                              &none &none &none       &none &mo FUN &none
+                        >;
+                };
+
+                taipo_down_layer
+                {       // 9 - taipo down
+                        // -----------------------------------------------------------------------------
+                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
+                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
+                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
+                        //                  | --- | --- | ---- |   | ---- | --- | --- |
+                        display-name = "TAIPO-";
+                        bindings = <
+                            &none &none &none &none &none &none       &none &none &none &none &none &none
+                            &none &none &none &none &none &none       &none &none &none &none &none &none
+                            &none &none &none &none &none &none       &none &none &none &none &none &none
+                                              &none &none &none       &none &mo FUN &none
+                        >;
+                };
+
+                function_layer
+                {       // 10 - FUNCTION
+                        // -----------------------------------------------------------------------------
+                        // | --- | F9  | F10 | F11 | F12 | --- |   | --- |ISOCH|ERGOL|GMING|TAIPO| --- |
+                        // | --- | F5  | F6  | F7  | F8  | --- |   | --- | --- | --- | --- | --- | --- |
+                        // | --- | F1  | F2  | F3  | F4  | --- |   |BT-CL|BT-0 |BT-1 |BT-2 |BT-3 |BT-4 |
+                        //                  | ESC | DEL | BSPC |   | SPC  | ENT | --- |
+                        display-name = "FUNCTION";
+                        bindings = <
+                            &none &kp F9       &kp F10     &kp F11      &kp F12     &none       &none      &to CH       &to ERG      &to GAMING   &to TAIPO_UP &to TAIPO_DOWN
+                            &none &mt LSHFT F5 &mt LGUI F6 &mt LCTRL F7 &mt LALT F8 &none       &none      &kp LALT     &kp LCTRL    &kp LGUI     &kp LSHFT    &none
+                            &none &kp F1       &kp F2      &kp F3       &kp F4      &none       &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4
+                                                                &trans &trans &trans                   &trans &trans &trans
+                        >;
+                };
+
+                none_layer
+                {       // 11 - NONE
+                        // -----------------------------------------------------------------------------
+                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
+                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
+                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
+                        //                  | --- | --- | ---- |   | ---- | --- | --- |
+                        display-name = "NONE";
+                        bindings = <
+                            &none &none &none &none &none &none       &none &none &none &none &none &none
+                            &none &none &none &none &none &none       &none &none &none &none &none &none
+                            &none &none &none &none &none &none       &none &none &none &none &none &none
+                                              &none &none &none       &none &none &none           
                         >;
                 };
         };
