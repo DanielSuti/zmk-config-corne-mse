@@ -34,21 +34,39 @@
                 // | 12 | 13 | 14 | 15 | 16 | 17 |   | 18 | 19 | 20 | 21 | 22 | 23 |
                 // | 24 | 25 | 26 | 27 | 28 | 29 |   | 30 | 31 | 32 | 33 | 34 | 35 |
                 //                | 36 | 37 | 38 |   | 39 | 40 | 41 |
-                combo_ESC {
+                combo_ESC_left {
                         timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
                         key-positions = <13 14>;
                         bindings = <&mt LS(LGUI) ESC>;
                         layers = <CH CH_NAV ERG ERG_NAV MSE>;
                 };
-                combo_TAB {
+                combo_ESC_right {
+                        timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
+                        key-positions = <21 22>;
+                        bindings = <&mt LS(LGUI) ESC>;
+                        layers = <CH CH_NAV ERG ERG_NAV MSE>;
+                };
+                combo_TAB_left {
                         timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
                         key-positions = <14 15>;
                         bindings = <&mt LC(LGUI) TAB>;
                         layers = <CH CH_NAV ERG ERG_NAV MSE>;
                 };
-                combo_ENTER {
+                combo_TAB_right {
+                        timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
+                        key-positions = <20 21>;
+                        bindings = <&mt LC(LGUI) TAB>;
+                        layers = <CH CH_NAV ERG ERG_NAV MSE>;
+                };
+                combo_ENTER_left {
                         timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
                         key-positions = <15 16>;
+                        bindings = <&mt LC(LALT) RET>;
+                        layers = <CH CH_NAV ERG ERG_NAV MSE>;
+                };
+                combo_ENTER_right {
+                        timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
+                        key-positions = <19 20>;
                         bindings = <&mt LC(LALT) RET>;
                         layers = <CH CH_NAV ERG ERG_NAV MSE>;
                 };
