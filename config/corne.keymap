@@ -15,12 +15,14 @@
 #define CH_EX 3
 #define ERG 4
 #define ERG_NAV 5
-#define MSE 6
-#define GAMING 7
-#define TAIPO_UP 8
-#define TAIPO_DOWN 9
-#define FUN 10
-#define NONE 11
+#define COL 6
+#define COL_NAV 7
+#define GAMING 8
+#define TAIPO_UP 9
+#define TAIPO_DOWN 10
+#define MSE 11
+#define FUN 12
+#define NONE 13
 
 #define DEFAULT_COMBOS_TIMEOUT_MS 50
 
@@ -38,49 +40,74 @@
                         timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
                         key-positions = <13 14>;
                         bindings = <&mt LS(LGUI) ESC>;
-                        layers = <CH CH_NAV ERG ERG_NAV MSE>;
+                        layers = <CH CH_NAV ERG ERG_NAV MSE COL COL_NAV>;
                 };
                 combo_ESC_right {
                         timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
                         key-positions = <21 22>;
                         bindings = <&mt LS(LGUI) ESC>;
-                        layers = <CH CH_NAV ERG ERG_NAV MSE>;
+                        layers = <CH CH_NAV ERG ERG_NAV MSE COL COL_NAV>;
                 };
                 combo_TAB_left {
                         timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
                         key-positions = <14 15>;
                         bindings = <&mt LC(LGUI) TAB>;
-                        layers = <CH CH_NAV ERG ERG_NAV MSE>;
+                        layers = <CH CH_NAV ERG ERG_NAV MSE COL COL_NAV>;
                 };
                 combo_TAB_right {
                         timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
                         key-positions = <20 21>;
                         bindings = <&mt LC(LGUI) TAB>;
-                        layers = <CH CH_NAV ERG ERG_NAV MSE>;
+                        layers = <CH CH_NAV ERG ERG_NAV MSE COL COL_NAV>;
                 };
                 combo_ENTER_left {
                         timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
                         key-positions = <15 16>;
                         bindings = <&mt LC(LALT) RET>;
-                        layers = <CH CH_NAV ERG ERG_NAV MSE>;
+                        layers = <CH CH_NAV ERG ERG_NAV MSE COL COL_NAV>;
                 };
                 combo_ENTER_right {
                         timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
                         key-positions = <19 20>;
                         bindings = <&mt LC(LALT) RET>;
-                        layers = <CH CH_NAV ERG ERG_NAV MSE>;
+                        layers = <CH CH_NAV ERG ERG_NAV MSE COL COL_NAV>;
                 };
                 combo_CAPS_LOCK {
                         timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
                         key-positions = <13 22>;
                         bindings = <&kp CAPS>;
-                        layers = <CH CH_NAV ERG ERG_NAV MSE>;
+                        layers = <CH CH_NAV ERG ERG_NAV MSE COL COL_NAV>;
+                };
+                combo_DK_COL {
+                        timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
+                        key-positions = <9 10>;
+                        bindings = <&kp O>;
+                        layers = <COL>;
+                };
+                combo_dot_COL {
+                        timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
+                        key-positions = <31 32>;
+                        bindings = <&kp N>;
+                        layers = <COL>;
+                };
+                combo_comma_COL {
+                        timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
+                        key-positions = <32 33>;
+                        bindings = <&kp DOT>;
+                        layers = <COL>;
+                };
+                combo_dash_COL {
+                        timeout-ms = <DEFAULT_COMBOS_TIMEOUT_MS>;
+                        key-positions = <26 27>;
+                        bindings = <&kp C>;
+                        layers = <COL>;
                 };
         };
 };
 
 &mt
 {
+        // Used for home-row mods
         tapping-term-ms = <250>;
         flavor = "tap-preferred";
 };
@@ -101,8 +128,17 @@
                         compatible = "zmk,behavior-hold-tap";
                         #binding-cells = <2>;
                         tapping-term-ms = <250>;
+                        flavor = "tap-preferred";
                         quick-tap-ms = <0>;
                         bindings = <&mo>, <&key_repeat>;
+                };
+                ht_kp: ht_kp {
+                        compatible = "zmk,behavior-hold-tap";
+                        #binding-cells = <2>;
+                        tapping-term-ms = <200>;
+                        flavor = "balanced";
+                        quick-tap-ms = <0>;
+                        bindings = <&kp>, <&kp>;
                 };
         };
 };
@@ -233,24 +269,50 @@
                         >;
                 };
 
-                mouse_layer
-                {       // 6 - MOUSE
+/*
+        Q C O P W   J M D F Y
+        A S E N B   L R T I U
+          X Z V       H G K
+
+        Q C O P W   J M D ' Y
+        A S E N F   L R T I U
+        Z X - V B   . H G , K
+*/
+
+                colibry_default_layer
+                {       // 6 - BASE
                         // -----------------------------------------------------------------------------
-                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
-                        // | --- | --- | --- | --- | --- | --- |   | --- | MS1 | MS2 | MS3 | --- | --- |
-                        // | --- | --- | --- | --- | --- |     |   | --- | MS4 | MS5 | --- | --- | --- |
-                        //                  | ESC | DEL | BSPC |   | SPC  | ENT | --- |
-                        display-name = "MOUSE";
+                        // |  Q  |  C  |  O  |  P  |  W  |   |  J  |  M  |  D  |  F  |  Y  |
+                        // |  A  |  S  |  E  |  N  |  B  |   |  L  |  R  |  T  |  I  |  U  |
+                        // | --- |  X  |  Z  |  V  | --- |   | --- |  H  |  G  |  K  | --- |
+                        //            | ESC | DEL | BSPC |   | SPC  | ENT | --- |
+                        display-name = "30-ERG";
                         bindings = <
-                            &none &none     &msc SCRL_UP   &mmv MOVE_UP   &msc SCRL_DOWN  &none        &none &none     &none     &none     &none &none
-                            &none &kp LSHFT &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_RIGHT &none        &none &mkp LCLK &mkp RCLK &mkp MCLK &none &none
-                            &none &none     &msc SCRL_LEFT &none          &msc SCRL_RIGHT &none        &none &mkp MB4  &mkp MB5  &none     &none &none
-                                                                           &none &none &none               &none &none &none
+                            &none &kp Q       &kp W      &kp E       &kp R      &kp T       &kp Y &kp U      &kp I       &ht_kp O G &kp P          &none
+                            &none &mt LSHFT A &mt LGUI S &mt LCTRL D &mt LALT F &kp B       &kp H &mt LALT J &mt LCTRL K &mt LGUI L &mt LSHFT SEMI &none
+                            &none &none       &kp X      &kp Z       &kp V      &none       &none &kp M      &kp COMMA   &kp FSLH   &none          &none
+                                            &mt LSHFT ESC &lt MSE DEL &mt RALT BSPC           &lt COL_NAV SPACE &lt FUN RET &mo NONE
+                        >;
+                };
+
+                colibry_navigation_layer
+                {       // 7 - NAVIGATION
+                        // -----------------------------------------------------------------------------
+                        // |CPS-L|HOME | up  | END |PG-UP|   | / ÷ | 7 & | 8 * | 9 # | --- |
+                        // | TAB |left |down |right|PG-DW|   | - ? | 4 $ | 5 % | 6 ^ | 0 @ |
+                        // | ESC | --- | --- | --- |     |   | , ; | 1 € | 2 « | 3 » | . : |
+                        //            | ESC | DEL | BSPC |   | SPC  | ENT | --- |
+                        display-name = "30-NAV";
+                        bindings = <
+                            &none &kp HOME &msc SCRL_UP &kp UP   &msc SCRL_DOWN   &kp PG_UP        &kp RA(L) &kp N7      &kp N8       &kp N9      &kp N        &none
+                            &none &kp END  &kp LEFT     &kp DOWN &kp RIGHT        &kp PG_DN        &kp C     &mt LALT N4 &mt LCTRL N5 &mt LGUI N6 &mt LSHFT N0 &none
+                            &none &none    &none        &none    &none            &none            &none     &kp N1      &kp N2       &kp N3      &none        &none
+                                                                       &trans &trans &trans              &trans &trans &trans
                         >;
                 };
 
                 qwertz_gaming_layer
-                {       // 7
+                {       // 8
                         // -----------------------------------------------------------------------------------------
                         // | M |  TAB  |  Q  |  W  |  E  |  R  |   | --- | --- | --- | --- | --- | --- |
                         // | I | SHIFT |  A  |  S  |  D  |  F  |   | --- | --- | --- | --- | --- | --- |
@@ -266,7 +328,7 @@
                 };
 
                 taipo_up_layer
-                {       // 8 - taipo up
+                {       // 9 - taipo up
                         // -----------------------------------------------------------------------------
                         // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
                         // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
@@ -282,7 +344,7 @@
                 };
 
                 taipo_down_layer
-                {       // 9 - taipo down
+                {       // 10 - taipo down
                         // -----------------------------------------------------------------------------
                         // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
                         // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
@@ -297,16 +359,32 @@
                         >;
                 };
 
-                function_layer
-                {       // 10 - FUNCTION
+                mouse_layer
+                {       // 11 - MOUSE
                         // -----------------------------------------------------------------------------
-                        // | --- | F9  | F10 | F11 | F12 | --- |   | --- |ISOCH|ERGOL|GMING|TAIPO| --- |
+                        // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
+                        // | --- | --- | --- | --- | --- | --- |   | --- | MS1 | MS2 | MS3 | --- | --- |
+                        // | --- | --- | --- | --- | --- |     |   | --- | MS4 | MS5 | --- | --- | --- |
+                        //                  | ESC | DEL | BSPC |   | SPC  | ENT | --- |
+                        display-name = "MOUSE";
+                        bindings = <
+                            &none &none     &msc SCRL_UP   &mmv MOVE_UP   &msc SCRL_DOWN  &none        &none &none     &none     &none     &none &none
+                            &none &kp LSHFT &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_RIGHT &none        &none &mkp LCLK &mkp RCLK &mkp MCLK &none &none
+                            &none &none     &msc SCRL_LEFT &none          &msc SCRL_RIGHT &none        &none &mkp MB4  &mkp MB5  &none     &none &none
+                                                                           &none &none &none               &none &none &none
+                        >;
+                };
+
+                function_layer
+                {       // 12 - FUNCTION
+                        // -----------------------------------------------------------------------------
+                        // | --- | F9  | F10 | F11 | F12 | --- |   | --- |ISOCH|ERGOL|GMING|COLIB| --- |
                         // | --- | F5  | F6  | F7  | F8  | --- |   | --- | --- | --- | --- | --- | --- |
                         // | --- | F1  | F2  | F3  | F4  | --- |   |BT-CL|BT-0 |BT-1 |BT-2 |BT-3 |BT-4 |
                         //                  | ESC | DEL | BSPC |   | SPC  | ENT | --- |
                         display-name = "FUNCTION";
                         bindings = <
-                            &none &kp F9       &kp F10     &kp F11      &kp F12     &none       &none      &to CH       &to ERG      &to GAMING   &to TAIPO_UP &to TAIPO_DOWN
+                            &none &kp F9       &kp F10     &kp F11      &kp F12     &none       &none      &to CH       &to ERG      &to GAMING   &to COL      &none
                             &none &mt LSHFT F5 &mt LGUI F6 &mt LCTRL F7 &mt LALT F8 &none       &none      &kp LALT     &kp LCTRL    &kp LGUI     &kp LSHFT    &none
                             &none &kp F1       &kp F2      &kp F3       &kp F4      &none       &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4
                                                                 &trans &trans &trans                   &trans &trans &trans
@@ -314,7 +392,7 @@
                 };
 
                 none_layer
-                {       // 11 - NONE
+                {       // 13 - NONE
                         // -----------------------------------------------------------------------------
                         // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
                         // | --- | --- | --- | --- | --- | --- |   | --- | --- | --- | --- | --- | --- |
