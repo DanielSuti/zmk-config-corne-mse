@@ -133,6 +133,9 @@
                         quick-tap-ms = <0>;
                         bindings = <&mo>, <&key_repeat>;
                 };
+
+                // Usage: &ht_kp <&kp1> <&kp2>
+                // Output: <&kp1> on hold or <&kp2> on tap
                 ht_kp: ht_kp {
                         compatible = "zmk,behavior-hold-tap";
                         #binding-cells = <2>;
@@ -289,7 +292,7 @@
                         //            | ESC | DEL | BSPC |   | SPC  | ENT | --- |
                         display-name = "30-ERG";
                         bindings = <
-                                &none &kp Q       &kp W      &kp E       &kp R      &kp T       &kp Y &kp U      &kp I       &ht_kp O G &kp P          &none
+                                &none &kp Q       &ht_kp O W &kp E       &kp R      &kp T       &kp Y &kp U      &kp I       &ht_kp O G &kp P          &none
                                 &none &mt LSHFT A &mt LGUI S &mt LCTRL D &mt LALT F &kp B       &kp H &mt LALT J &mt LCTRL K &mt LGUI L &mt LSHFT SEMI &none
                                 &none &none       &kp X      &kp Z       &kp V      &none       &none &kp M      &kp COMMA   &kp FSLH   &none          &none
                                                 &mt LSHFT ESC &lt MSE DEL &mt RALT BSPC           &lt COL_NAV SPACE &lt FUN RET &mo NONE
