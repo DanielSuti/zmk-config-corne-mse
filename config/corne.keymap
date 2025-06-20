@@ -144,6 +144,23 @@
                         quick-tap-ms = <0>;
                         bindings = <&kp>, <&kp>;
                 };
+
+                dk: dead_key {
+                        compatible = "zmk,behavior-mod-morph";
+                        #binding-cells = <0>;
+                        bindings = <&kp O>, <&kp O>;
+                        mods = <(MOD_LSFT|MOD_RSFT)>;
+                };
+                dk_kp: hold_tap_keypress {
+                        // Usage: &ht_kp <&kp>
+                        // Output: <&dk> on hold or <&kp> on tap
+                        compatible = "zmk,behavior-hold-tap";
+                        #binding-cells = <1>;
+                        tapping-term-ms = <200>;
+                        flavor = "balanced";
+                        quick-tap-ms = <0>;
+                        bindings = <&dk>, <&kp>;
+                };
         };
 };
 
@@ -292,7 +309,7 @@
                         //            | ESC | DEL | BSPC |   | SPC  | ENT | --- |
                         display-name = "30-ERG";
                         bindings = <
-                                &none &kp Q       &ht_kp O W &kp E       &kp R      &kp T       &kp Y &kp U      &kp I       &ht_kp O G &kp P          &none
+                                &none &kp Q       &dk_kp   W &kp E       &kp R      &kp T       &kp Y &kp U      &kp I       &dk_kp   G &kp P          &none
                                 &none &mt LSHFT A &mt LGUI S &mt LCTRL D &mt LALT F &kp B       &kp H &mt LALT J &mt LCTRL K &mt LGUI L &mt LSHFT SEMI &none
                                 &none &none       &kp X      &kp Z       &kp V      &none       &none &kp M      &kp COMMA   &kp FSLH   &none          &none
                                                 &mt LSHFT ESC &lt MSE DEL &mt RALT BSPC           &lt COL_NAV SPACE &lt FUN RET &mo NONE
